@@ -308,4 +308,6 @@ https://github.com/Muqadas1234
 
 # 📸 Swagger UI
 
-![Swagger UI](docs/swagger-ui.png)
+## 📸 Swagger UI Screenshot
+
+<img src="docs/swagger-ui.png" width="900">
