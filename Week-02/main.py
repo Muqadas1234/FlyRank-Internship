@@ -1,7 +1,11 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
-app = FastAPI()
+app = FastAPI(
+    title="Task API",
+    description="A simple CRUD API for managing a to-do task list.",
+    version="1.0"
+)
 
 
 # In-memory task list
@@ -33,8 +37,13 @@ class TaskUpdate(BaseModel):
     title: str
     done: bool
 
+
 # Root endpoint
-@app.get("/")
+@app.get(
+    "/",
+    summary="API Information",
+    description="Returns basic information about the Task API."
+)
 def home():
     return {
         "name": "Task API",
@@ -44,7 +53,11 @@ def home():
 
 
 # Health endpoint
-@app.get("/health")
+@app.get(
+    "/health",
+    summary="Health Check",
+    description="Checks whether the API server is running."
+)
 def health():
     return {
         "status": "ok"
@@ -52,14 +65,23 @@ def health():
 
 
 # Get all tasks
-@app.get("/tasks")
+@app.get(
+    "/tasks",
+    summary="Get all tasks",
+    description="Returns the complete list of tasks."
+)
 def get_all_tasks():
     return tasks
 
 
-# Get a single task by ID
-@app.get("/tasks/{task_id}")
+# Get single task
+@app.get(
+    "/tasks/{task_id}",
+    summary="Get task by ID",
+    description="Returns a specific task using its unique ID."
+)
 def get_task(task_id: int):
+
     for task in tasks:
         if task["id"] == task_id:
             return task
@@ -70,31 +92,38 @@ def get_task(task_id: int):
     )
 
 
-# Create a new task
-@app.post("/tasks", status_code=201)
+# Create task
+@app.post(
+    "/tasks",
+    status_code=201,
+    summary="Create a new task",
+    description="Creates a new task. Title is required and cannot be empty."
+)
 def create_task(task: TaskCreate):
 
-    # Validate title
     if not task.title.strip():
         raise HTTPException(
             status_code=400,
             detail="Title cannot be empty"
         )
 
-    # Create new task
     new_task = {
         "id": len(tasks) + 1,
         "title": task.title,
         "done": False
     }
 
-    # Add task to the list
     tasks.append(new_task)
 
-    # Return created task
     return new_task
 
-@app.put("/tasks/{task_id}")
+
+# Update task
+@app.put(
+    "/tasks/{task_id}",
+    summary="Update a task",
+    description="Updates the title and completion status of an existing task."
+)
 def update_task(task_id: int, updated_task: TaskUpdate):
 
     for task in tasks:
@@ -108,7 +137,14 @@ def update_task(task_id: int, updated_task: TaskUpdate):
         detail=f"Task {task_id} not found"
     )
 
-@app.delete("/tasks/{task_id}", status_code=204)
+
+# Delete task
+@app.delete(
+    "/tasks/{task_id}",
+    status_code=204,
+    summary="Delete a task",
+    description="Deletes a task using its ID."
+)
 def delete_task(task_id: int):
 
     for task in tasks:
