@@ -305,3 +305,7 @@ AI Engineer | Full Stack Developer
 
 GitHub:
 https://github.com/Muqadas1234
+
+# 📸 Swagger UI
+
+![Swagger UI](docs/swagger-ui.png)
